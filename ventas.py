@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import sqlite3
+import csv
 
 def crear_tabla():
     conexion = sqlite3.connect("ventas.db")
@@ -54,6 +55,8 @@ ventas = [
 ('2024-01-02', 'Producto B', 'Categoría 2', 2990, 3, 2990*3)
 ]
 
+
+
 #for venta in ventas:
 #    insertToDb(venta)
 
@@ -74,3 +77,18 @@ ventas_hoy = buscar_por_fecha('2024-05-20')
 
 for venta in ventas_hoy:
     print(int(venta['total']))
+
+#Necesito Exportar todos los datos a csv desde el SQLITE:
+def exportar_csv():
+
+    conexion = sqlite3.connect("ventas.db")
+    cursor = conexion.cursor()
+    cursor.execute('SELECT * FROM ventas')
+    ventas = cursor.fetchall()
+    conexion.close()
+    with open('ventas.csv', 'w', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow(['id', 'fecha', 'producto', 'categoria', 'precio', 'cantidad', 'total'])
+        writer.writerows(ventas)
+
+exportar_csv()
